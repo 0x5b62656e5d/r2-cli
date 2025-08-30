@@ -1,4 +1,4 @@
-use crate::cli::Commands;
+use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
@@ -11,6 +11,7 @@ use std::path::PathBuf;
 
 mod cli;
 mod config;
+mod list_buckets;
 mod list_files;
 mod s3_client;
 
@@ -35,25 +36,42 @@ async fn main() -> Result<()> {
     let cli: Cli = Cli::parse();
 
     match cli.command {
-        Commands::List { bucket } => {
-            println!("{:?}", list_files(&client, &bucket).await?);
-        }
-        Commands::Download {
-            bucket,
-            filename,
-            location,
-            override_filename,
-        } => {
-            println!("Download files: {bucket}, {filename:?}, {location:?}, {override_filename:?}");
-        }
-        Commands::Upload {
-            bucket,
-            filename,
-            location,
-            override_filename,
-        } => {
-            println!("Upload files: {bucket}, {filename:?}, {location:?}, {override_filename:?}");
-        }
+        Commands::Buckets { commands } => match commands {
+            BucketCommands::List => {
+                println!("Listing buckets");
+            }
+            BucketCommands::Create { name } => {
+                println!("Creating bucket: {name}");
+            }
+            BucketCommands::Delete { name } => {
+                println!("Deleting bucket: {name}");
+            }
+        },
+        Commands::Files { commands } => match commands {
+            FileCommands::List { bucket } => {
+                println!("{:?}", list_files(&client, &bucket).await?);
+            }
+            FileCommands::Download {
+                bucket,
+                filename,
+                location,
+                override_filename,
+            } => {
+                println!(
+                    "Download files: {bucket}, {filename:?}, {location:?}, {override_filename:?}"
+                );
+            }
+            FileCommands::Upload {
+                bucket,
+                filename,
+                location,
+                override_filename,
+            } => {
+                println!(
+                    "Upload files: {bucket}, {filename:?}, {location:?}, {override_filename:?}"
+                );
+            }
+        },
     }
 
     Ok(())

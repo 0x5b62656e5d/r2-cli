@@ -9,6 +9,31 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
+    Buckets {
+        #[command(subcommand)]
+        commands: BucketCommands,
+    },
+    Files {
+        #[command(subcommand)]
+        commands: FileCommands,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum BucketCommands {
+    List,
+    Create {
+        #[arg(required = true)]
+        name: String,
+    },
+    Delete {
+        #[arg(required = true)]
+        name: String,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum FileCommands {
     List {
         #[arg()]
         bucket: String,
@@ -40,29 +65,3 @@ pub enum Commands {
         override_filename: Option<String>,
     },
 }
-
-// #[derive(Parser, Debug)]
-// #[command(author, version, about, long_about = None)]
-// pub struct Args {
-//     #[arg(value_enum, required = true)]
-//     pub method: Method,
-
-//     #[arg(required = true)]
-//     pub bucket: String,
-
-//     #[arg()]
-//     pub filename: Option<String>,
-
-//     #[arg()]
-//     pub location: Option<String>,
-
-//     #[arg(short, long)]
-//     pub override_filename: Option<String>
-// }
-
-// #[derive(ValueEnum, Clone, Debug)]
-// pub enum Method {
-//     List,
-//     Download,
-//     Upload,
-// }
