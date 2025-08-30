@@ -1,10 +1,12 @@
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
+use crate::list_buckets::pretty_print;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
 use cli::Cli;
 use config::Config;
+use list_buckets::list_buckets;
 use list_files::list_files;
 use std::fs;
 use std::path::PathBuf;
@@ -38,7 +40,7 @@ async fn main() -> Result<()> {
     match cli.command {
         Commands::Buckets { commands } => match commands {
             BucketCommands::List => {
-                println!("Listing buckets");
+                pretty_print(list_buckets(&client).await?).await;
             }
             BucketCommands::Create { name } => {
                 println!("Creating bucket: {name}");
