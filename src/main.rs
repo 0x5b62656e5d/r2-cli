@@ -1,6 +1,7 @@
 use crate::cli::Commands;
 use crate::config::get_config_dir;
 use anyhow::{Result, bail};
+use aws_sdk_s3::Client;
 use clap::Parser;
 use cli::Cli;
 use config::Config;
@@ -11,6 +12,7 @@ mod cli;
 mod config;
 mod download;
 mod list;
+mod s3_client;
 mod upload;
 
 #[::tokio::main]
@@ -28,6 +30,8 @@ async fn main() -> Result<()> {
     }
 
     let config: Config = config::get_config()?;
+
+    let client: Client = s3_client::build_client(&config.default).await?;
 
     let cli: Cli = Cli::parse();
 
