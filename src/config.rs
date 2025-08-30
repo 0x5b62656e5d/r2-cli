@@ -11,7 +11,8 @@ pub struct Config {
 pub struct Keys {
     pub key_id: String,
     pub secret_key: String,
-    pub region: Option<String>,
+    pub endpoint_url: String,
+    pub region: String,
 }
 
 pub fn get_config() -> Result<Config, anyhow::Error> {

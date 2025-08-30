@@ -1,4 +1,5 @@
 [default]
 key_id = "Key ID"
 secret_key = "Secret Key"
+endpoint_url = "Endpoint URL"
 region = "Region"
