@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Commands::List { bucket } => {
-            println!("List files: {bucket}")
+            println!("List files: {bucket}");
         }
         Commands::Download {
             bucket,
@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
             location,
             override_filename,
         } => {
-            println!("Download files: {bucket}, {filename:?}, {location:?}, {override_filename:?}")
+            println!("Download files: {bucket}, {filename:?}, {location:?}, {override_filename:?}");
         }
         Commands::Upload {
             bucket,
@@ -49,7 +49,7 @@ async fn main() -> Result<()> {
             location,
             override_filename,
         } => {
-            println!("Upload files: {bucket}, {filename:?}, {location:?}, {override_filename:?}")
+            println!("Upload files: {bucket}, {filename:?}, {location:?}, {override_filename:?}");
         }
     }
 
