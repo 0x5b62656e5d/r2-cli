@@ -5,15 +5,14 @@ use aws_sdk_s3::Client;
 use clap::Parser;
 use cli::Cli;
 use config::Config;
+use list_files::list_files;
 use std::fs;
 use std::path::PathBuf;
 
 mod cli;
 mod config;
-mod download;
-mod list;
+mod list_files;
 mod s3_client;
-mod upload;
 
 #[::tokio::main]
 async fn main() -> Result<()> {
@@ -37,7 +36,7 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Commands::List { bucket } => {
-            println!("List files: {bucket}");
+            println!("{:?}", list_files(&client, &bucket).await?);
         }
         Commands::Download {
             bucket,
