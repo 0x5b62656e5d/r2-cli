@@ -1,5 +1,6 @@
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
+use crate::delete::delete_file;
 use crate::download::download_file;
 use crate::list_buckets::list_buckets;
 use crate::list_files::list_files;
@@ -14,6 +15,7 @@ use std::path::PathBuf;
 
 mod cli;
 mod config;
+mod delete;
 mod download;
 mod list_buckets;
 mod list_files;
@@ -56,6 +58,11 @@ async fn main() -> Result<()> {
         Commands::Files { commands } => match commands {
             FileCommands::List { bucket } => {
                 println!("{}", list_files(&client, &bucket).await?);
+            }
+            FileCommands::Delete { bucket, key } => {
+                delete_file(&client, bucket, key.clone()).await?;
+
+                println!("Deleted {:?} successfully", key.clone());
             }
             FileCommands::Download {
                 bucket,
