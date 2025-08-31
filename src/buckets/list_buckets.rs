@@ -1,5 +1,5 @@
 use aws_sdk_s3::{Client, operation::list_buckets::ListBucketsOutput};
-use tabled::{Table, Tabled, settings::Style};
+use tabled::{Table, Tabled};
 
 use crate::util::build_table;
 
