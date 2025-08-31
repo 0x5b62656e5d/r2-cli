@@ -38,6 +38,13 @@ pub enum FileCommands {
         #[arg()]
         bucket: String,
     },
+    Delete {
+        #[arg(required = true)]
+        bucket: String,
+
+        #[arg()]
+        key: String,
+    },
     Download {
         #[arg(required = true)]
         bucket: String,
