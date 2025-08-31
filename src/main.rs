@@ -72,13 +72,24 @@ async fn main() -> Result<()> {
                     upload_file(
                         &client,
                         bucket,
-                        location.split('/').last().unwrap().to_string(),
-                        location,
+                        location.clone().split('/').last().unwrap().to_string(),
+                        location.clone(),
                     )
                     .await?;
                 } else {
-                    upload_file(&client, bucket, override_filename.unwrap(), location).await?;
+                    upload_file(
+                        &client,
+                        bucket,
+                        override_filename.unwrap(),
+                        location.clone(),
+                    )
+                    .await?;
                 }
+
+                println!(
+                    "Uploaded {:?} successfully",
+                    location.split('/').last().unwrap().to_string()
+                );
             }
         },
     }
