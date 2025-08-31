@@ -1,4 +1,5 @@
-use crate::config::Regions;
+use crate::config::{Regions, save_regions};
+use aws_sdk_s3::Client;
 use tabled::{
     Table, Tabled,
     settings::{Color, Modify, Style, object::Rows},
@@ -26,10 +27,32 @@ where
     .to_owned()
 }
 
-pub fn get_bucket_region(regions: &Regions, bucket: String) -> String {
-    regions
-        .buckets
-        .get(bucket.as_str())
-        .cloned()
-        .unwrap_or_default()
+pub async fn get_bucket_region(
+    regions: &mut Regions,
+    bucket: String,
+    client: &Client,
+) -> Result<String, anyhow::Error> {
+    if let Some(region) = regions.buckets.get(bucket.as_str()) {
+        Ok(region.clone())
+    } else {
+        let resp = client
+            .get_bucket_location()
+            .bucket(bucket.clone())
+            .send()
+            .await?;
+
+        let region: String = match resp.location_constraint() {
+            None => "us-east-1".to_string(),
+            Some(aws_sdk_s3::types::BucketLocationConstraint::Eu) => "eu-west-1".to_string(),
+            Some(other) => other.as_str().to_string(),
+        };
+
+        regions
+            .buckets
+            .insert(bucket.clone().to_string(), region.clone());
+
+        save_regions(regions)?;
+
+        Ok(region)
+    }
 }

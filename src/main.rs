@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     init_config()?;
 
     let config: Config = config::get_config()?;
-    let regions: Regions = config::get_regions()?;
+    let mut regions: Regions = config::get_regions()?;
 
     let default_client: Client =
         s3_client::build_client(&config.default, "us-east-1".to_string()).await?;
@@ -49,7 +49,7 @@ async fn main() -> Result<()> {
             }
             BucketCommands::Delete { name } => {
                 let client: Client =
-                    build_client(&config.default, get_bucket_region(&regions, name.clone()))
+                    build_client(&config.default, get_bucket_region(&mut regions, name.clone(), &default_client).await?)
                         .await?;
 
                 match Confirm::new(&format!(
@@ -76,14 +76,14 @@ async fn main() -> Result<()> {
         Commands::Files { commands } => match commands {
             FileCommands::List { bucket } => {
                 let client: Client =
-                    build_client(&config.default, get_bucket_region(&regions, bucket.clone()))
+                    build_client(&config.default, get_bucket_region(&mut regions, bucket.clone(), &default_client).await?)
                         .await?;
 
                 println!("{}", list_files(&client, &bucket).await?);
             }
             FileCommands::Delete { bucket, key } => {
                 let client: Client =
-                    build_client(&config.default, get_bucket_region(&regions, bucket.clone()))
+                    build_client(&config.default, get_bucket_region(&mut regions, bucket.clone(), &default_client).await?)
                         .await?;
 
                 match Confirm::new(&format!(
@@ -114,7 +114,7 @@ async fn main() -> Result<()> {
                 override_filename,
             } => {
                 let client: Client =
-                    build_client(&config.default, get_bucket_region(&regions, bucket.clone()))
+                    build_client(&config.default, get_bucket_region(&mut regions, bucket.clone(), &default_client).await?)
                         .await?;
 
                 download_file(&client, bucket, key.clone(), location, override_filename).await?;
@@ -127,7 +127,7 @@ async fn main() -> Result<()> {
                 override_filename,
             } => {
                 let client: Client =
-                    build_client(&config.default, get_bucket_region(&regions, bucket.clone()))
+                    build_client(&config.default, get_bucket_region(&mut regions, bucket.clone(), &default_client).await?)
                         .await?;
 
                 if override_filename.is_none() {

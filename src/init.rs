@@ -1,8 +1,8 @@
 use crate::{
     config::{self, save_regions},
     s3_client::build_client,
+    util::get_bucket_region,
 };
-use aws_sdk_s3::types::BucketLocationConstraint;
 
 pub async fn init_regions() -> Result<(), anyhow::Error> {
     let config: config::Config = config::get_config()?;
@@ -21,17 +21,8 @@ pub async fn init_regions() -> Result<(), anyhow::Error> {
             continue;
         }
 
-        let loc = default_client
-            .get_bucket_location()
-            .bucket(name)
-            .send()
-            .await?;
-
-        let region = match loc.location_constraint() {
-            Some(BucketLocationConstraint::Eu) => "eu-west-1".to_string(),
-            Some(v) => v.as_str().to_string(),
-            None => "us-east-1".to_string(),
-        };
+        let region: String =
+            get_bucket_region(&mut regions, name.to_string(), &default_client).await?;
 
         regions.buckets.insert(name.to_string(), region);
     }
