@@ -1,10 +1,10 @@
+use crate::util::round;
 use aws_sdk_s3::Client;
 use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
 use aws_sdk_s3::types::Object;
 use byte_unit::{Byte, UnitType};
+use chrono::prelude::*;
 use tabled::{Table, Tabled, settings::Style};
-
-use crate::util::round;
 
 #[derive(Tabled)]
 struct FileInfo {
@@ -25,9 +25,17 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
                     .unwrap()
                     .get_appropriate_unit(UnitType::Decimal);
 
+                let timestamp = DateTime::from_timestamp_millis(
+                    o.last_modified().unwrap().to_millis().unwrap(),
+                )
+                .unwrap()
+                .with_timezone(&Local)
+                .format("%b %d, %Y - %H:%M:%S")
+                .to_string();
+
                 FileInfo {
                     key: o.key().unwrap().to_string(),
-                    last_modified: o.last_modified().unwrap().to_string(),
+                    last_modified: timestamp,
                     size: format!("{:?} {:?}", round(size.get_value(), 2), size.get_unit()),
                 }
             })
