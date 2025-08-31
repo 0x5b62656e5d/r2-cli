@@ -2,7 +2,6 @@ use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
 use crate::list_buckets::list_buckets;
 use crate::list_files::list_files;
-use crate::util::pretty_print;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
@@ -41,7 +40,7 @@ async fn main() -> Result<()> {
     match cli.command {
         Commands::Buckets { commands } => match commands {
             BucketCommands::List => {
-                pretty_print(list_buckets(&client).await?).await;
+                println!("{}", list_buckets(&client).await?);
             }
             BucketCommands::Create { name } => {
                 println!("Creating bucket: {name}");
@@ -52,7 +51,7 @@ async fn main() -> Result<()> {
         },
         Commands::Files { commands } => match commands {
             FileCommands::List { bucket } => {
-                pretty_print(list_files(&client, &bucket).await?).await;
+                println!("{}", list_files(&client, &bucket).await?);
             }
             FileCommands::Download {
                 bucket,
