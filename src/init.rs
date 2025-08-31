@@ -1,10 +1,8 @@
-use aws_sdk_s3::types::BucketLocationConstraint;
-
 use crate::{
-    config::{self, get_config_dir},
+    config::{self, save_regions},
     s3_client::build_client,
 };
-use std::{fs, path::PathBuf};
+use aws_sdk_s3::types::BucketLocationConstraint;
 
 pub async fn init_regions() -> Result<(), anyhow::Error> {
     let config: config::Config = config::get_config()?;
@@ -38,8 +36,7 @@ pub async fn init_regions() -> Result<(), anyhow::Error> {
         regions.buckets.insert(name.to_string(), region);
     }
 
-    let path: PathBuf = get_config_dir().join("regions.toml");
-    fs::write(path, toml::to_string(&regions).unwrap())?;
+    save_regions(&regions)?;
 
     Ok(())
 }

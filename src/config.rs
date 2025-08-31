@@ -66,3 +66,10 @@ is_cloudflare_r2 = false
 
     Ok(())
 }
+
+pub fn save_regions(regions: &Regions) -> Result<(), anyhow::Error> {
+    let path: PathBuf = get_config_dir().join("regions.toml");
+    fs::write(path, toml::to_string(&regions).unwrap())?;
+
+    Ok(())
+}
