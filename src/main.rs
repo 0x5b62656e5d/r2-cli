@@ -1,8 +1,8 @@
+use crate::buckets::list_buckets::list_buckets;
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
 use crate::files::delete::delete_file;
 use crate::files::download::download_file;
-use crate::list_buckets::list_buckets;
 use crate::files::list_files::list_files;
 use crate::files::upload::upload_file;
 use anyhow::{Result, bail};
@@ -14,10 +14,10 @@ use inquire::Confirm;
 use std::fs;
 use std::path::PathBuf;
 
-mod files;
+mod buckets;
 mod cli;
 mod config;
-mod list_buckets;
+mod files;
 mod s3_client;
 mod util;
 
