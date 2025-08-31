@@ -1,6 +1,8 @@
 use aws_sdk_s3::{Client, operation::list_buckets::ListBucketsOutput};
 use tabled::{Table, Tabled, settings::Style};
 
+use crate::util::build_table;
+
 #[derive(Tabled)]
 struct Bucket {
     name: String,
@@ -9,17 +11,11 @@ struct Bucket {
 pub async fn list_buckets(client: &Client) -> Result<Table, anyhow::Error> {
     let res: ListBucketsOutput = client.list_buckets().send().await?;
 
-    let mut table = Table::new(
-        res.buckets
-            .unwrap()
-            .iter()
-            .map(|b| Bucket {
-                name: b.name.as_ref().unwrap().to_string(),
-            })
-            .collect::<Vec<Bucket>>(),
-    );
-
-    table.with(Style::modern());
+    let table: Table = build_table(res.buckets.unwrap(), |b: &aws_sdk_s3::types::Bucket| {
+        Bucket {
+            name: b.name.as_ref().unwrap().to_string(),
+        }
+    });
 
     Ok(table)
 }
