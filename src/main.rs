@@ -1,7 +1,8 @@
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
-use crate::list_buckets::{list_buckets, pretty_print};
+use crate::list_buckets::list_buckets;
 use crate::list_files::list_files;
+use crate::util::pretty_print;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
@@ -15,6 +16,7 @@ mod config;
 mod list_buckets;
 mod list_files;
 mod s3_client;
+mod util;
 
 #[::tokio::main]
 async fn main() -> Result<()> {
@@ -50,7 +52,7 @@ async fn main() -> Result<()> {
         },
         Commands::Files { commands } => match commands {
             FileCommands::List { bucket } => {
-                println!("{:?}", list_files(&client, &bucket).await?);
+                pretty_print(list_files(&client, &bucket).await?).await;
             }
             FileCommands::Download {
                 bucket,
