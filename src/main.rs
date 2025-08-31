@@ -2,6 +2,7 @@ use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
 use crate::list_buckets::list_buckets;
 use crate::list_files::list_files;
+use crate::upload::upload_file;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
@@ -15,6 +16,7 @@ mod config;
 mod list_buckets;
 mod list_files;
 mod s3_client;
+mod upload;
 mod util;
 
 #[::tokio::main]
@@ -66,7 +68,17 @@ async fn main() -> Result<()> {
                 location,
                 override_filename,
             } => {
-                println!("Upload files: {bucket}, {location:?}, {override_filename:?}");
+                if override_filename.is_none() {
+                    upload_file(
+                        &client,
+                        bucket,
+                        location.split('/').last().unwrap().to_string(),
+                        location,
+                    )
+                    .await?;
+                } else {
+                    upload_file(&client, bucket, override_filename.unwrap(), location).await?;
+                }
             }
         },
     }
