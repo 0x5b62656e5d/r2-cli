@@ -16,7 +16,11 @@ Configuration template:
 key_id = "Key ID"
 secret_key = "Secret Key"
 endpoint_url = "Endpoint URL"
+is_cloudflare_r2 = false
 ```
+
+> [!NOTE]
+> If AWS S3 is being used, make sure to set `is_cloudflare_r2` to false. `endpoint_url` is not required for AWS S3 users. The endpoint URL is required for Cloudflare R2 users.
 
 ## Usage
 ```
@@ -24,9 +28,12 @@ NAME
     s3-cli - Manages S3 buckets and files
 
 COMMANDS
+    init
+        Initilizes and builds a local map of buckets and their regions for faster access
+
     buckets list
         Lists buckets associated with the S3 account
-    buckets create <bucket_name>
+    buckets create <bucket_name> <bucket_region>
         Creates a bucket
     buckets delete <bucket_name>
         Deletes a bucket
