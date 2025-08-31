@@ -10,6 +10,7 @@ use aws_sdk_s3::Client;
 use clap::Parser;
 use cli::Cli;
 use config::Config;
+use inquire::Confirm;
 use std::fs;
 use std::path::PathBuf;
 
@@ -60,9 +61,26 @@ async fn main() -> Result<()> {
                 println!("{}", list_files(&client, &bucket).await?);
             }
             FileCommands::Delete { bucket, key } => {
-                delete_file(&client, bucket, key.clone()).await?;
+                match Confirm::new(&format!(
+                    "Are you sure you want to delete the file {:?} from bucket {:?}? (y/n)",
+                    key.clone(),
+                    bucket.clone()
+                ))
+                .prompt()
+                {
+                    Ok(v) => {
+                        if !v {
+                            bail!("Aborting file deletion");
+                        }
 
-                println!("Deleted {:?} successfully", key.clone());
+                        delete_file(&client, bucket, key.clone()).await?;
+
+                        println!("Deleted {:?} successfully", key.clone());
+                    }
+                    Err(_) => {
+                        bail!("There was an error when confirming file deletion");
+                    }
+                }
             }
             FileCommands::Download {
                 bucket,
