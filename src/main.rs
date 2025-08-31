@@ -1,3 +1,5 @@
+use crate::buckets::create::create_bucket;
+use crate::buckets::delete::delete_bucket;
 use crate::buckets::list_buckets::list_buckets;
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
@@ -47,10 +49,30 @@ async fn main() -> Result<()> {
                 println!("{}", list_buckets(&client).await?);
             }
             BucketCommands::Create { name } => {
-                println!("Creating bucket: {name}");
+                create_bucket(&client, name.clone()).await?;
+
+                println!("Created bucket {:?} successfully", name.clone());
             }
             BucketCommands::Delete { name } => {
-                println!("Deleting bucket: {name}");
+                match Confirm::new(&format!(
+                    "Are you sure you want to delete the bucket {:?}? (y/n)",
+                    name.clone()
+                ))
+                .prompt()
+                {
+                    Ok(v) => {
+                        if !v {
+                            bail!("Aborting bucket deletion");
+                        }
+
+                        delete_bucket(&client, name.clone()).await?;
+
+                        println!("Deleted bucket {:?} successfully", name.clone());
+                    }
+                    Err(_) => {
+                        bail!("There was an error when confirming bucket deletion");
+                    }
+                }
             }
         },
         Commands::Files { commands } => match commands {
