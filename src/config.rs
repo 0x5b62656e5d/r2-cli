@@ -21,5 +21,5 @@ pub fn get_config() -> Result<Config, anyhow::Error> {
 }
 
 pub fn get_config_dir() -> PathBuf {
-    env::home_dir().unwrap().join(".config/r2-cli")
+    env::home_dir().unwrap().join(".config/s3-cli")
 }
