@@ -1,19 +1,19 @@
-use crate::buckets::create::create_bucket;
-use crate::buckets::delete::delete_bucket;
-use crate::buckets::list_buckets::list_buckets;
-use crate::cli::{BucketCommands, Commands, FileCommands};
-use crate::client::config::{Config, Regions, get_config, get_regions, init_config};
-use crate::client::init::init_regions;
-use crate::client::s3_client::build_client;
-use crate::files::delete::delete_file;
-use crate::files::download::download_file;
-use crate::files::list_files::list_files;
-use crate::files::upload::upload_file;
-use crate::util::get_bucket_region;
+use crate::{
+    buckets::{create::create_bucket, delete::delete_bucket, list_buckets::list_buckets},
+    cli::{BucketCommands, Cli, Commands, FileCommands},
+    client::{
+        config::{Config, Regions, get_config, get_regions, init_config},
+        init::init_regions,
+        s3_client::build_client,
+    },
+    files::{
+        delete::delete_file, download::download_file, list_files::list_files, upload::upload_file,
+    },
+    util::get_bucket_region,
+};
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
-use cli::Cli;
 use inquire::Confirm;
 
 mod buckets;

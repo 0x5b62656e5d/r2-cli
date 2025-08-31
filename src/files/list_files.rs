@@ -1,7 +1,5 @@
 use crate::util::{build_table, round};
-use aws_sdk_s3::Client;
-use aws_sdk_s3::operation::list_objects_v2::ListObjectsV2Output;
-use aws_sdk_s3::types::Object;
+use aws_sdk_s3::{Client, operation::list_objects_v2::ListObjectsV2Output, types::Object};
 use byte_unit::{Byte, UnitType};
 use chrono::prelude::*;
 use tabled::{Table, Tabled};
