@@ -19,15 +19,14 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
             .unwrap()
             .iter()
             .map(|o: &Object| {
-                let size: String = Byte::from_i64(o.size().unwrap_or_else(|| 0))
+                let size = Byte::from_i64(o.size().unwrap_or_else(|| 0))
                     .unwrap()
-                    .get_appropriate_unit(UnitType::Decimal)
-                    .to_string();
-
+                    .get_appropriate_unit(UnitType::Decimal);
+            
                 FileInfo {
                     key: o.key().unwrap().to_string(),
                     last_modified: o.last_modified().unwrap().to_string(),
-                    size: size,
+                    size: format!("{:?} {:?}", (size.get_value() * 100.0).round() / 100.0, size.get_unit()),
                 }
             })
             .collect::<Vec<FileInfo>>(),
