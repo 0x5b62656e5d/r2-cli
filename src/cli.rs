@@ -43,10 +43,10 @@ pub enum FileCommands {
         bucket: String,
 
         #[arg()]
-        key: Option<String>,
+        key: String,
 
         #[arg()]
-        location: Option<String>,
+        location: String,
 
         #[arg(short, long)]
         override_filename: Option<String>,
