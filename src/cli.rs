@@ -43,7 +43,7 @@ pub enum FileCommands {
         bucket: String,
 
         #[arg()]
-        filename: Option<String>,
+        key: Option<String>,
 
         #[arg()]
         location: Option<String>,
@@ -56,10 +56,7 @@ pub enum FileCommands {
         bucket: String,
 
         #[arg()]
-        filename: Option<String>,
-
-        #[arg()]
-        location: Option<String>,
+        location: String,
 
         #[arg(short, long)]
         override_filename: Option<String>,

@@ -55,23 +55,18 @@ async fn main() -> Result<()> {
             }
             FileCommands::Download {
                 bucket,
-                filename,
+                key,
                 location,
                 override_filename,
             } => {
-                println!(
-                    "Download files: {bucket}, {filename:?}, {location:?}, {override_filename:?}"
-                );
+                println!("Download files: {bucket}, {key:?}, {location:?}, {override_filename:?}");
             }
             FileCommands::Upload {
                 bucket,
-                filename,
                 location,
                 override_filename,
             } => {
-                println!(
-                    "Upload files: {bucket}, {filename:?}, {location:?}, {override_filename:?}"
-                );
+                println!("Upload files: {bucket}, {location:?}, {override_filename:?}");
             }
         },
     }
