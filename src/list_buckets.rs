@@ -10,7 +10,3 @@ pub async fn list_buckets(client: &Client) -> Result<Vec<String>, anyhow::Error>
         .map(|b| b.name.clone().unwrap())
         .collect::<Vec<String>>())
 }
-
-pub async fn pretty_print(buckets: Vec<String>) {
-    buckets.iter().for_each(|b| println!("{}", b));
-}
