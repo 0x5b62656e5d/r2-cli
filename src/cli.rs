@@ -17,6 +17,7 @@ pub enum Commands {
         #[command(subcommand)]
         commands: FileCommands,
     },
+    Init {},
 }
 
 #[derive(Subcommand, Debug)]
@@ -25,6 +26,9 @@ pub enum BucketCommands {
     Create {
         #[arg(required = true)]
         name: String,
+
+        #[arg(required = true)]
+        region: String,
     },
     Delete {
         #[arg(required = true)]

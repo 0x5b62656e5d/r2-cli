@@ -1,3 +1,4 @@
+use crate::config::Regions;
 use tabled::{
     Table, Tabled,
     settings::{Color, Modify, Style, object::Rows},
@@ -23,4 +24,12 @@ where
     .with(Style::modern())
     .with(Modify::new(Rows::first()).with(Color::FG_BRIGHT_MAGENTA))
     .to_owned()
+}
+
+pub fn get_bucket_region(regions: &Regions, bucket: String) -> String {
+    regions
+        .buckets
+        .get(bucket.as_str())
+        .cloned()
+        .unwrap_or_default()
 }
