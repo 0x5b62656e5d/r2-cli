@@ -1,3 +1,5 @@
-pub async fn pretty_print(vec: Vec<String>) {
-    vec.iter().for_each(|s| println!("{}", s.replace("\"", "")));
+pub fn round(value: f64, precision: u32) -> f64 {
+    let factor: f64 = 10f64.powi(precision as i32);
+
+    (value * factor).round() / factor
 }

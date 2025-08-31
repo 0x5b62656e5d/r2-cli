@@ -4,6 +4,8 @@ use aws_sdk_s3::types::Object;
 use byte_unit::{Byte, UnitType};
 use tabled::{Table, Tabled, settings::Style};
 
+use crate::util::round;
+
 #[derive(Tabled)]
 struct FileInfo {
     key: String,
@@ -14,7 +16,7 @@ struct FileInfo {
 pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::Error> {
     let res: ListObjectsV2Output = client.list_objects_v2().bucket(bucket).send().await?;
 
-    let mut table = Table::new(
+    let mut table: Table = Table::new(
         res.contents
             .unwrap()
             .iter()
@@ -22,11 +24,11 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
                 let size = Byte::from_i64(o.size().unwrap_or_else(|| 0))
                     .unwrap()
                     .get_appropriate_unit(UnitType::Decimal);
-            
+
                 FileInfo {
                     key: o.key().unwrap().to_string(),
                     last_modified: o.last_modified().unwrap().to_string(),
-                    size: format!("{:?} {:?}", (size.get_value() * 100.0).round() / 100.0, size.get_unit()),
+                    size: format!("{:?} {:?}", round(size.get_value(), 2), size.get_unit()),
                 }
             })
             .collect::<Vec<FileInfo>>(),
