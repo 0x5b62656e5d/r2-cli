@@ -4,9 +4,16 @@ A simple CLI tool to manage S3 buckets and files from the terminal
 
 ## Setup
 
-This tool requires API keys acquired from a S3 service. API keys must be granted `Admin Read & Write` in order for bucket and file management to work properly.
+### Install
+
+1. Clone this repository
+    a. `git clone https://github.com/0x5b62656e5d/s3-cli` or `gh repo clone 0x5b62656e5d/s3-cli`
+2. Install the binary to path
+    a. `cargo install --path .`
 
 ### Environment variables setup
+
+This tool requires API keys acquired from a S3 service. API keys must be granted `Admin Read & Write` in order for bucket and file management to work properly.
 
 Create a `config.toml` file under `~/.config/s3-cli/`
 
