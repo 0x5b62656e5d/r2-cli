@@ -1,5 +1,6 @@
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
+use crate::download::download_file;
 use crate::list_buckets::list_buckets;
 use crate::list_files::list_files;
 use crate::upload::upload_file;
@@ -13,6 +14,7 @@ use std::path::PathBuf;
 
 mod cli;
 mod config;
+mod download;
 mod list_buckets;
 mod list_files;
 mod s3_client;
@@ -61,7 +63,9 @@ async fn main() -> Result<()> {
                 location,
                 override_filename,
             } => {
-                println!("Download files: {bucket}, {key:?}, {location:?}, {override_filename:?}");
+                download_file(&client, bucket, key.clone(), location, override_filename).await?;
+
+                println!("Downloaded {:?} successfully", key.clone());
             }
             FileCommands::Upload {
                 bucket,
