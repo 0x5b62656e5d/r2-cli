@@ -23,11 +23,10 @@ Configuration template:
 key_id = "Key ID"
 secret_key = "Secret Key"
 endpoint_url = "Endpoint URL"
-is_aws = false
 ```
 
 > [!NOTE]
-> If AWS S3 is being used, make sure to set `is_aws` to true. `endpoint_url` is not required for AWS S3 users. The endpoint URL is required for other users.
+> If AWS S3 is being used, make sure to leave `endpoint_url` blank. `endpoint_url` is only required for non-AWS S3 users.
 
 ## Usage
 ```

@@ -11,8 +11,7 @@ pub struct Config {
 pub struct Keys {
     pub key_id: String,
     pub secret_key: String,
-    pub endpoint_url: Option<String>,
-    pub is_aws: bool,
+    pub endpoint_url: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -52,7 +51,6 @@ pub fn init_config() -> Result<(), anyhow::Error> {
 key_id = ""
 secret_key = ""
 endpoint_url = ""
-is_aws = false
 "#,
             )?;
         }
