@@ -1,10 +1,10 @@
 use crate::cli::{BucketCommands, Commands, FileCommands};
 use crate::config::get_config_dir;
-use crate::delete::delete_file;
-use crate::download::download_file;
+use crate::files::delete::delete_file;
+use crate::files::download::download_file;
 use crate::list_buckets::list_buckets;
-use crate::list_files::list_files;
-use crate::upload::upload_file;
+use crate::files::list_files::list_files;
+use crate::files::upload::upload_file;
 use anyhow::{Result, bail};
 use aws_sdk_s3::Client;
 use clap::Parser;
@@ -14,14 +14,11 @@ use inquire::Confirm;
 use std::fs;
 use std::path::PathBuf;
 
+mod files;
 mod cli;
 mod config;
-mod delete;
-mod download;
 mod list_buckets;
-mod list_files;
 mod s3_client;
-mod upload;
 mod util;
 
 #[::tokio::main]
