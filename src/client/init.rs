@@ -1,6 +1,6 @@
 use crate::{
-    config::{self, save_regions},
-    s3_client::build_client,
+    client::config::{self, save_regions},
+    client::s3_client::build_client,
     util::get_bucket_region,
 };
 

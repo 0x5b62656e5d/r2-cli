@@ -1,4 +1,4 @@
-use crate::config::{Regions, save_regions};
+use crate::client::config::{Regions, save_regions};
 use aws_sdk_s3::Client;
 use tabled::{
     Table, Tabled,

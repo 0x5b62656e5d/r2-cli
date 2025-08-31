@@ -1,4 +1,4 @@
-use crate::config::Keys;
+use crate::client::config::Keys;
 use anyhow::Result;
 use aws_config::{Region, SdkConfig};
 use aws_credential_types::Credentials;

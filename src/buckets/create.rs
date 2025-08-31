@@ -1,4 +1,4 @@
-use crate::config::{Regions, get_regions, save_regions};
+use crate::client::config::{Regions, get_regions, save_regions};
 use aws_sdk_s3::{
     Client,
     types::{BucketLocationConstraint, CreateBucketConfiguration},
