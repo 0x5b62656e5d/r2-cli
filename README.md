@@ -23,11 +23,11 @@ Configuration template:
 key_id = "Key ID"
 secret_key = "Secret Key"
 endpoint_url = "Endpoint URL"
-is_cloudflare_r2 = false
+is_aws = false
 ```
 
 > [!NOTE]
-> If AWS S3 is being used, make sure to set `is_cloudflare_r2` to false. `endpoint_url` is not required for AWS S3 users. The endpoint URL is required for Cloudflare R2 users.
+> If AWS S3 is being used, make sure to set `is_aws` to true. `endpoint_url` is not required for AWS S3 users. The endpoint URL is required for other users.
 
 ## Usage
 ```

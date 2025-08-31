@@ -18,7 +18,7 @@ pub async fn build_client(keys: &Keys, region: String) -> Result<Client> {
         "custom-env",
     );
 
-    if keys.is_cloudflare_r2
+    if !keys.is_aws
         && keys.endpoint_url.is_some()
         && !keys.endpoint_url.as_ref().unwrap().is_empty()
     {
@@ -31,11 +31,11 @@ pub async fn build_client(keys: &Keys, region: String) -> Result<Client> {
             .build();
 
         Ok(Client::from_conf(sdk_conf))
-    } else if keys.is_cloudflare_r2
+    } else if !keys.is_aws
         && (keys.endpoint_url.is_none()
             || (keys.endpoint_url.is_some() && keys.endpoint_url.as_ref().unwrap().is_empty()))
     {
-        anyhow::bail!("Endpoint URL is required for R2")
+        anyhow::bail!("Endpoint URL is required for non-AWS S3 users")
     } else {
         let sdk_conf: aws_sdk_s3::Config = S3ConfigBuilder::from(&base)
             .credentials_provider(creds)

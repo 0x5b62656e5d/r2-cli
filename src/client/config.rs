@@ -12,7 +12,7 @@ pub struct Keys {
     pub key_id: String,
     pub secret_key: String,
     pub endpoint_url: Option<String>,
-    pub is_cloudflare_r2: bool,
+    pub is_aws: bool,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -52,7 +52,7 @@ pub fn init_config() -> Result<(), anyhow::Error> {
 key_id = ""
 secret_key = ""
 endpoint_url = ""
-is_cloudflare_r2 = false
+is_aws = false
 "#,
             )?;
         }
