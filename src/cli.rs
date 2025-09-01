@@ -49,7 +49,7 @@ pub enum FileCommands {
         #[arg()]
         key: String,
 
-        #[arg(short)]
+        #[arg(short, long)]
         force: bool,
     },
     Download {

@@ -46,9 +46,9 @@ COMMANDS
 
     files list <bucket_name>
         Lists all the files in a bucket
-    files delete <bucket_name> <file_name> [-f]
+    files delete <bucket_name> <file_name> [-f | --force]
         Deletes a file in a bucket
-        Apply the force flag to delete all versions of a file (Not supported for R2)
+        Apply the `-f` or `--force` flag to delete all versions of a file (Not supported for R2)
     files download <bucket_name> <file_key> <download_location> [-o <override_downloaded_filename>]
         Downloads a file from a bucket to a given location (optionally rename it)
     files upload <bucket_name> <file_location> [-o <override_uploaded_filename>]
