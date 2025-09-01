@@ -43,23 +43,23 @@ pub fn init_config() -> Result<(), anyhow::Error> {
         fs::create_dir_all(&config_dir)?;
     }
 
-    if let Ok(res) = fs::exists(config_dir.join("config.toml")) {
-        if !res {
-            fs::write(
-                config_dir.join("config.toml"),
-                r#"[default]
+    if let Ok(res) = fs::exists(config_dir.join("config.toml"))
+        && !res
+    {
+        fs::write(
+            config_dir.join("config.toml"),
+            r#"[default]
 key_id = ""
 secret_key = ""
 endpoint_url = ""
 "#,
-            )?;
-        }
+        )?;
     }
 
-    if let Ok(res) = fs::exists(config_dir.join("regions.toml")) {
-        if !res {
-            fs::write(config_dir.join("regions.toml"), "[buckets]\n")?;
-        }
+    if let Ok(res) = fs::exists(config_dir.join("regions.toml"))
+        && !res
+    {
+        fs::write(config_dir.join("regions.toml"), "[buckets]\n")?;
     }
 
     Ok(())

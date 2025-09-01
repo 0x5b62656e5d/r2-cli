@@ -20,7 +20,7 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
     }
 
     let table: Table = build_table(res.contents.unwrap(), |o: &Object| {
-        let size = Byte::from_i64(o.size().unwrap_or_else(|| 0))
+        let size = Byte::from_i64(o.size().unwrap_or(0))
             .unwrap()
             .get_appropriate_unit(UnitType::Decimal);
 
