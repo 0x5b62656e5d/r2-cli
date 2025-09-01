@@ -41,6 +41,7 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
       
       - name: Build (release)
+        shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ] && [ "${{ matrix.target.triple }}" = "aarch64-unknown-linux-musl" ]; then
             cross build --release --target ${{ matrix.target.triple }}
