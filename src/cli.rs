@@ -48,6 +48,9 @@ pub enum FileCommands {
 
         #[arg()]
         key: String,
+
+        #[arg(short)]
+        force: bool,
     },
     Download {
         #[arg(required = true)]

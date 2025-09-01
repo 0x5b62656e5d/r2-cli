@@ -81,7 +81,7 @@ async fn main() -> Result<()> {
 
                 println!("{}", list_files(&client, &bucket).await?);
             }
-            FileCommands::Delete { bucket, key } => {
+            FileCommands::Delete { bucket, key, force } => {
                 let client: Client = build_client(
                     &config.default,
                     get_bucket_region(&mut regions, bucket.clone(), &default_client).await?,
@@ -100,7 +100,14 @@ async fn main() -> Result<()> {
                             bail!("Aborting file deletion");
                         }
 
-                        delete_file(&client, bucket, key.clone()).await?;
+                        delete_file(
+                            &client,
+                            bucket,
+                            key.clone(),
+                            !config.default.endpoint_url.contains("cloudflare"),
+                            force
+                        )
+                        .await?;
 
                         println!("Deleted {:?} successfully", key.clone());
                     }
