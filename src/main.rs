@@ -105,7 +105,7 @@ async fn main() -> Result<()> {
                             bucket,
                             key.clone(),
                             !config.default.endpoint_url.contains("cloudflare"),
-                            force
+                            force,
                         )
                         .await?;
 
@@ -147,7 +147,7 @@ async fn main() -> Result<()> {
                     upload_file(
                         &client,
                         bucket,
-                        location.clone().split('/').last().unwrap().to_string(),
+                        location.clone().split('/').next_back().unwrap().to_string(),
                         location.clone(),
                     )
                     .await?;
@@ -163,7 +163,7 @@ async fn main() -> Result<()> {
 
                 println!(
                     "Uploaded {:?} successfully",
-                    location.split('/').last().unwrap().to_string()
+                    location.split('/').next_back().unwrap().to_string()
                 );
             }
         },
