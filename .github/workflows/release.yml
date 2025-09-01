@@ -19,7 +19,7 @@ jobs:
           - { os: macos-latest, triple: aarch64-apple-darwin, ext: "", archive: tar.gz }
           - { os: macos-latest, triple: x86_64-apple-darwin, ext: "", archive: tar.gz }
           - { os: ubuntu-latest, triple: x86_64-unknown-linux-gnu, ext: "", archive: tar.gz }
-          - { os: ubuntu-latest, triple: aarch64-unknown-linux-gnu, ext: "", archive: tar.gz }
+          - { os: ubuntu-latest, triple: aarch64-unknown-linux-musl, ext: "", archive: tar.gz }
           - { os: windows-latest, triple: x86_64-pc-windows-msvc, ext: ".exe", archive: zip }
     steps:
       - uses: actions/checkout@v4
@@ -32,15 +32,21 @@ jobs:
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2
 
-      - name: Install aarch64 Linux linker
-        if: runner.os == 'Linux' && matrix.target.triple == 'aarch64-unknown-linux-gnu'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Install zip (Windows)
+        if: runner.os == 'Windows'
+        run: choco install -y zip
+
+      - name: Install cross (Linux aarch64 musl only)
+        if: runner.os == 'Linux' && matrix.target.triple == 'aarch64-unknown-linux-musl'
+        run: cargo install cross --git https://github.com/cross-rs/cross
       
       - name: Build (release)
         run: |
-          cargo build --release --target ${{ matrix.target.triple }}
+          if [ "${{ runner.os }}" = "Linux" ] && [ "${{ matrix.target.triple }}" = "aarch64-unknown-linux-musl" ]; then
+            cross build --release --target ${{ matrix.target.triple }}
+          else
+            cargo build --release --target ${{ matrix.target.triple }}
+          fi
       
       - name: Prepare dist
         shell: bash
@@ -147,6 +153,9 @@ jobs:
 
       - name: Cache cargo
         uses: Swatinem/rust-cache@v2
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Verify tag matches Cargo.toml version
         run: |
