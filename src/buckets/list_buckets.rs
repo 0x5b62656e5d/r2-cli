@@ -6,6 +6,7 @@ use crate::util::build_table;
 #[derive(Tabled)]
 /// A simplified representation of an S3 bucket
 struct Bucket {
+    num: usize,
     name: String,
 }
 
@@ -17,11 +18,13 @@ struct Bucket {
 pub async fn list_buckets(client: &Client) -> Result<Table, anyhow::Error> {
     let res: ListBucketsOutput = client.list_buckets().send().await?;
 
-    let table: Table = build_table(res.buckets.unwrap(), |b: &aws_sdk_s3::types::Bucket| {
-        Bucket {
+    let table: Table = build_table(
+        res.buckets.unwrap(),
+        |i: usize, b: &aws_sdk_s3::types::Bucket| Bucket {
+            num: i + 1,
             name: b.name.as_ref().unwrap().to_string(),
-        }
-    });
+        },
+    );
 
     Ok(table)
 }

@@ -26,12 +26,13 @@ pub fn round(value: f64, precision: u32) -> f64 {
 pub fn build_table<A, B, C, D>(data: A, map_fn: B) -> Table
 where
     A: IntoIterator<Item = C>,
-    B: Fn(&C) -> D,
+    B: Fn(usize, &C) -> D,
     D: Tabled,
 {
     Table::new(
         data.into_iter()
-            .map(|item: C| map_fn(&item))
+            .enumerate()
+            .map(|(i, item)| map_fn(i, &item))
             .collect::<Vec<D>>(),
     )
     .with(Style::modern())

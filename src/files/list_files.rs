@@ -8,6 +8,7 @@ use tabled::{Table, Tabled};
 #[derive(Tabled)]
 /// Struct representing file information
 struct FileInfo {
+    num: usize,
     key: String,
     last_modified: String,
     size: String,
@@ -26,7 +27,7 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
         bail!("No files found in the bucket '{}'", bucket)
     }
 
-    let table: Table = build_table(res.contents.unwrap(), |o: &Object| {
+    let table: Table = build_table(res.contents.unwrap(), |i: usize, o: &Object| {
         let size = Byte::from_i64(o.size().unwrap_or(0))
             .unwrap()
             .get_appropriate_unit(UnitType::Decimal);
@@ -39,6 +40,7 @@ pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::
                 .to_string();
 
         FileInfo {
+            num: i + 1,
             key: o.key().unwrap().to_string(),
             last_modified: timestamp,
             size: format!("{:?} {:?}", round(size.get_value(), 2), size.get_unit()),
