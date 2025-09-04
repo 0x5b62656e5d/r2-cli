@@ -1,6 +1,15 @@
 use anyhow::bail;
 use aws_sdk_s3::Client;
 
+/// Deletes a file from an S3 bucket, optionally removing all versions if versioning is enabled
+/// # Arguments
+/// * `client` - A reference to the S3 client
+/// * `bucket` - The name of the bucket
+/// * `key` - The key (path) of the file to delete
+/// * `has_obj_ver` - A boolean indicating if the S3 service supports object versioning
+/// * `force` - A boolean indicating if all versions should be deleted (if versioning is supported)
+/// # Returns
+/// * `Result<(), anyhow::Error>` - `Ok(())` if successful, error if the operation fails
 pub async fn delete_file(
     client: &Client,
     bucket: String,

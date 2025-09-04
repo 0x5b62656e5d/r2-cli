@@ -5,21 +5,34 @@ use tabled::{
     settings::{Color, Modify, Style, object::Rows},
 };
 
+/// Rounds a floating-point number to a specified number of decimal places
+/// # Arguments
+/// * `value` - The floating-point number to round
+/// * `precision` - The number of decimal places to round to
+/// # Returns
+/// * `f64` - The rounded floating-point number
 pub fn round(value: f64, precision: u32) -> f64 {
     let factor: f64 = 10f64.powi(precision as i32);
 
     (value * factor).round() / factor
 }
 
+/// Builds a table from an iterable data source using a given mapping function
+/// # Arguments
+/// * `data` - An iterable data source
+/// * `map_fn` - A function that maps each item in the data source to a type that implements `Tabled`
+/// # Returns
+/// * `Table` - A formatted table
 pub fn build_table<A, B, C, D>(data: A, map_fn: B) -> Table
 where
     A: IntoIterator<Item = C>,
-    B: Fn(&C) -> D,
+    B: Fn(usize, &C) -> D,
     D: Tabled,
 {
     Table::new(
         data.into_iter()
-            .map(|item: C| map_fn(&item))
+            .enumerate()
+            .map(|(i, item)| map_fn(i, &item))
             .collect::<Vec<D>>(),
     )
     .with(Style::modern())
@@ -27,6 +40,13 @@ where
     .to_owned()
 }
 
+/// Retrieves the region of an S3 bucket, caching the result in a local configuration
+/// # Arguments
+/// * `regions` - A mutable reference to the `Regions` struct containing cached bucket regions
+/// * `bucket` - The name of the bucket
+/// * `client` - A reference to the S3 client
+/// # Returns
+/// * `Result<String, anyhow::Error>` - The region of the bucket if successful, error if the operation fails
 pub async fn get_bucket_region(
     regions: &mut Regions,
     bucket: String,
