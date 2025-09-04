@@ -2072,7 +2072,7 @@ dependencies = [
 
 [[package]]
 name = "pepper-s3-cli"
-version = "1.1.5"
+version = "1.2.0"
 dependencies = [
  "anyhow",
  "aws-config",
