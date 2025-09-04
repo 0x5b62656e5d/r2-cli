@@ -4,6 +4,9 @@ use crate::{
     util::get_bucket_region,
 };
 
+/// Initializes the regions file by fetching the regions of all existing buckets using the default client configuration.
+/// # Returns
+/// * `Result<(), anyhow::Error>` - `Ok(())` if successful, error if the operation fails
 pub async fn init_regions() -> Result<(), anyhow::Error> {
     let config: config::Config = config::get_config()?;
     let mut regions: config::Regions = config::get_regions()?;

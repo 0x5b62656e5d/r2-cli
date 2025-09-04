@@ -4,6 +4,13 @@ use aws_sdk_s3::{
     types::{BucketLocationConstraint, CreateBucketConfiguration},
 };
 
+/// Create a new S3 bucket and save its region in the local configuration.
+/// # Arguments
+/// * `client` - A reference to the S3 client
+/// * `name` - The name of the bucket
+/// * `region` - The region where the bucket will be created
+/// # Returns
+/// * `Result<(), anyhow::Error>` - `Ok(())` if successful, error if the operation fails
 pub async fn create_bucket(
     client: &Client,
     name: String,

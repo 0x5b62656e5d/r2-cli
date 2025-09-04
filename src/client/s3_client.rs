@@ -7,6 +7,12 @@ use aws_sdk_s3::{
     config::{BehaviorVersion, Builder as S3ConfigBuilder},
 };
 
+/// Builds and returns an S3 client configured with the provided keys and region.
+/// # Arguments
+/// * `keys` - A reference to the `Keys` struct containing S3 credentials and endpoint URL
+/// * `region` - A string representing the AWS region
+/// # Returns
+/// * `Result<Client>` - An S3 client
 pub async fn build_client(keys: &Keys, region: String) -> Result<Client> {
     let base: SdkConfig = aws_config::defaults(BehaviorVersion::latest()).load().await;
 

@@ -3,11 +3,13 @@ use std::{collections::HashMap, env, fs, path::PathBuf};
 use toml;
 
 #[derive(Debug, Deserialize)]
+/// Configuration structure for S3 CLI
 pub struct Config {
     pub default: Keys,
 }
 
 #[derive(Debug, Deserialize)]
+/// Keys structure containing S3 credentials and URL endpoint
 pub struct Keys {
     pub key_id: String,
     pub secret_key: String,
@@ -15,27 +17,40 @@ pub struct Keys {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+/// Regions structure that maps bucket names to their respective regions
 pub struct Regions {
     #[serde(default)]
     pub buckets: HashMap<String, String>,
 }
 
+/// Loads the config from the config file
+/// # Returns
+/// * `Result<Config, anyhow::Error>` - `Config` or an error if the operation fails
 pub fn get_config() -> Result<Config, anyhow::Error> {
     Ok(toml::de::from_str(&fs::read_to_string(
         get_config_dir().join("config.toml"),
     )?)?)
 }
 
+/// Loads the regions from the regions file
+/// # Returns
+/// * `Result<Regions, anyhow::Error>` - `Regions` or an error if the operation fails
 pub fn get_regions() -> Result<Regions, anyhow::Error> {
     Ok(toml::de::from_str(&fs::read_to_string(
         get_config_dir().join("regions.toml"),
     )?)?)
 }
 
+/// Gets the configuration directory path
+/// # Returns
+/// * `PathBuf` - The path to the configuration directory
 pub fn get_config_dir() -> PathBuf {
     env::home_dir().unwrap().join(".config/s3-cli")
 }
 
+/// Initializes the configuration directory and files if they do not exist
+/// # Returns
+/// * `Result<(), anyhow::Error>` - `Ok(())` if successful, error if the operation fails
 pub fn init_config() -> Result<(), anyhow::Error> {
     let config_dir: PathBuf = get_config_dir();
 
@@ -65,6 +80,11 @@ endpoint_url = ""
     Ok(())
 }
 
+/// Saves the regions to the regions file
+/// # Arguments
+/// * `regions` - A reference to the `Regions` structure to be saved
+/// # Returns
+/// * `Result<(), anyhow::Error>` - `Ok(())` if successful, error if the operation fails
 pub fn save_regions(regions: &Regions) -> Result<(), anyhow::Error> {
     let path: PathBuf = get_config_dir().join("regions.toml");
     fs::write(path, toml::to_string(&regions).unwrap())?;

@@ -6,12 +6,19 @@ use chrono::prelude::*;
 use tabled::{Table, Tabled};
 
 #[derive(Tabled)]
+/// Struct representing file information
 struct FileInfo {
     key: String,
     last_modified: String,
     size: String,
 }
 
+/// Lists files in an S3 bucket
+/// # Arguments
+/// * `client` - A reference to the S3 client
+/// * `bucket` - The name of the bucket
+/// # Returns
+/// * `Result<Table, anyhow::Error>` - `Table` if successful, error if the operation fails
 pub async fn list_files(client: &Client, bucket: &str) -> Result<Table, anyhow::Error> {
     let res: ListObjectsV2Output = client.list_objects_v2().bucket(bucket).send().await?;
 
